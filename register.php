@@ -11,17 +11,14 @@ function username_exists($username){
 }
 
 // Funkcija ustvari uporabnika v tabeli users. Poskrbi tudi za ustrezno šifriranje uporabniškega gesla.
-function register_user($username, $password){
+function register_user($username, $password, $naslov, $posta, $telefon){
 	global $conn;
-	$username = mysqli_real_escape_string($conn, $username);
+	$username = mysqli_real_escape_string($conn, $username,);
 	$pass = sha1($password);
-	/* 
-		Tukaj za hashiranje gesla uporabljamo sha1 funkcijo. V praksi se priporočajo naprednejše metode, ki k geslu dodajo naključne znake (salt).
-		Več informacij: 
-		http://php.net/manual/en/faq.passwords.php#faq.passwords 
-		https://crackstation.net/hashing-security.htm
-	*/
-	$query = "INSERT INTO users (username, password) VALUES ('$username', '$pass');";
+	$naslov = mysqli_real_escape_string($conn, $naslov);
+    $posta = mysqli_real_escape_string($conn, $posta);
+    $telefon = mysqli_real_escape_string($conn, $telefon);
+    $query = "INSERT INTO users (username, password, naslov, posta, telefon) VALUES ('$username', '$pass', '$naslov', '$posta', '$telefon');";
 	if($conn->query($query)){
 		return true;
 	}
@@ -48,7 +45,7 @@ if(isset($_POST["submit"])){
 		$error = "Uporabniško ime je že zasedeno.";
 	}
 	//Podatki so pravilno izpolnjeni, registriraj uporabnika
-	else if(register_user($_POST["username"], $_POST["password"])){
+	else if(register_user($_POST["username"], $_POST["password"],$_POST["naslov"],$_POST["posta"],$_POST["telefon"])){
 		header("Location: login.php");
 		die();
 	}
@@ -60,11 +57,14 @@ if(isset($_POST["submit"])){
 
 ?>
 	<h2>Registracija</h2>
-	<form action="register.php" method="POST">
-		<label>Uporabniško ime</label><input type="text" name="username" /> <br/>
-		<label>Geslo</label><input type="password" name="password" /> <br/>
-		<label>Ponovi geslo</label><input type="password" name="repeat_password" /> <br/>
-		<input type="submit" name="submit" value="Pošlji" /> <br/>
+	<form action="register.php" method="POST" class = "form">
+		<label>Uporabniško ime (obvezno)</label><input type="text" name="username" /> <br/>
+    	<label>Geslo (obvezno)</label><input type="password" name="password" /> <br/>
+    	<label>Ponovi geslo (obvezno)</label><input type="password" name="repeat_password" /> <br/>
+    	<label>Naslov</label><input type="text" name="naslov" /> <br/>
+    	<label>Pošta</label><input type="text" name="posta" />  <br/>
+    	<label>Telefon</label><input type="text" name="telefon" /> <br/>
+    	<input type="submit" name="submit" value="Pošlji" /> <br/>
 		<label><?php echo $error; ?></label>
 	</form>
 <?php
