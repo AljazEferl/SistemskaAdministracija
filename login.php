@@ -27,7 +27,7 @@ if(isset($_POST["submit"])){
 }
 ?>
 	<h2>Prijava</h2>
-	<form action="login.php" method="POST">
+	<form action="login.php" method="POST" class = "form">
 		<label>Uporabniško ime</label><input type="text" name="username" /> <br/>
 		<label>Geslo</label><input type="password" name="password" /> <br/>
 		<input type="submit" name="submit" value="Pošlji" /> <br/>
